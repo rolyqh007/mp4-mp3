@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Convertidor</title>
+    <script src="https://unpkg.com/coi-serviceworker@0.1.7/coi-serviceworker.min.js"></script>
+</head>
+<body>
+    <input type="file" id="archivo" accept="video/*,audio/*">
+    <button id="convertir">Convertir a MP3</button>
+    <a id="descargar" style="display:none">Descargar</a>
+
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js">
+    </script>
+    <script>
+        const { createFFmpeg, fetchFile } = FFmpeg;
+        const ffmpeg = createFFmpeg({ log: true });
+
+        document.getElementById('convertir').onclick = async () => {
+            await ffmpeg.load();
+            const archivo = document.getElementById('archivo').files[0];
+            ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(archivo));
+            await ffmpeg.run('-i', 'input.mp4', 'output.mp3');
+            const data = ffmpeg.FS('readFile', 'output.mp3');
+            const url = URL.createObjectURL(new Blob([data.buffer]));
+            const link = document.getElementById('descargar');
+            link.href = url;
+            link.download = 'convertido.mp3';
+            link.style.display = 'block';
+            link.textContent = 'Descargar MP3';
+        }
+    </script>
+</body>
+</html>
