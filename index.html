@@ -17,6 +17,7 @@
             --muted: #64748b;
             --success: #10b981;
             --error: #ef4444;
+            --warning: #f59e0b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,25 +30,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 2rem;
+            padding: 2rem 1rem;
             background-image: 
                 radial-gradient(ellipse at 20% 20%, rgba(124,58,237,0.08) 0%, transparent 60%),
                 radial-gradient(ellipse at 80% 80%, rgba(6,182,212,0.06) 0%, transparent 60%);
         }
 
-        .container {
-            width: 100%;
-            max-width: 600px;
-        }
+        .container { width: 100%; max-width: 680px; }
 
         header {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
+            padding-top: 1rem;
         }
 
         header h1 {
-            font-size: 2.5rem;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
             font-weight: 800;
             letter-spacing: -0.03em;
             background: linear-gradient(135deg, #a78bfa, #06b6d4);
@@ -59,7 +57,7 @@
         header p {
             color: var(--muted);
             font-family: 'Space Mono', monospace;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             margin-top: 0.5rem;
             letter-spacing: 0.05em;
         }
@@ -68,15 +66,14 @@
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 16px;
-            padding: 2rem;
+            padding: 1.5rem;
             margin-bottom: 1rem;
         }
 
-        /* Drop zone */
         .dropzone {
             border: 2px dashed var(--border);
             border-radius: 12px;
-            padding: 3rem 2rem;
+            padding: 2.5rem 1.5rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
@@ -97,54 +94,121 @@
             height: 100%;
         }
 
-        .dropzone-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
+        .dropzone-icon { font-size: 2rem; margin-bottom: 0.75rem; }
+        .dropzone h3 { font-weight: 700; font-size: 1rem; margin-bottom: 0.25rem; }
+        .dropzone p { color: var(--muted); font-size: 0.8rem; font-family: 'Space Mono', monospace; }
 
-        .dropzone h3 {
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-        }
+        .file-list { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 1rem; }
 
-        .dropzone p {
-            color: var(--muted);
-            font-size: 0.85rem;
-            font-family: 'Space Mono', monospace;
-        }
-
-        .file-info {
-            display: none;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: rgba(124,58,237,0.1);
-            border: 1px solid rgba(124,58,237,0.3);
+        .file-item {
+            background: rgba(124,58,237,0.08);
+            border: 1px solid rgba(124,58,237,0.2);
             border-radius: 10px;
-            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
 
-        .file-info.visible { display: flex; }
+        .file-item-icon { font-size: 1.2rem; flex-shrink: 0; }
+        .file-item-info { flex: 1; min-width: 0; }
 
-        .file-icon { font-size: 1.5rem; }
-
-        .file-details { flex: 1; min-width: 0; }
-
-        .file-name {
+        .file-item-name {
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        .file-size {
-            color: var(--muted);
-            font-family: 'Space Mono', monospace;
-            font-size: 0.75rem;
+        .file-item-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.2rem;
+            flex-wrap: wrap;
         }
 
-        /* Format selector */
+        .file-item-size {
+            color: var(--muted);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+        }
+
+        .file-item-status {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            background: rgba(100,116,139,0.2);
+            color: var(--muted);
+        }
+
+        .file-item-status.converting { background: rgba(124,58,237,0.2); color: #a78bfa; }
+        .file-item-status.done { background: rgba(16,185,129,0.2); color: var(--success); }
+        .file-item-status.error { background: rgba(239,68,68,0.2); color: var(--error); }
+
+        .file-item-progress {
+            height: 3px;
+            background: var(--border);
+            border-radius: 3px;
+            margin-top: 0.4rem;
+            overflow: hidden;
+            display: none;
+        }
+
+        .file-item-progress.visible { display: block; }
+
+        .file-item-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            border-radius: 3px;
+            transition: width 0.3s;
+            width: 0%;
+        }
+
+        .file-item-remove {
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 1rem;
+            flex-shrink: 0;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: color 0.2s;
+        }
+
+        .file-item-remove:hover { color: var(--error); }
+
+        .file-item-download {
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.3);
+            border-radius: 6px;
+            color: var(--success);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            padding: 0.3rem 0.6rem;
+            cursor: pointer;
+            text-decoration: none;
+            flex-shrink: 0;
+            display: none;
+        }
+
+        .file-item-download.visible { display: block; }
+
+        .preview-wrap {
+            margin-top: 1rem;
+            display: none;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .preview-wrap.visible { display: block; }
+        .preview-wrap video { width: 100%; max-height: 200px; display: block; }
+        .preview-wrap audio { width: 100%; padding: 0.5rem; background: var(--surface); display: block; }
+
         .section-label {
             font-family: 'Space Mono', monospace;
             font-size: 0.7rem;
@@ -154,11 +218,7 @@
             margin-bottom: 0.75rem;
         }
 
-        .format-groups {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
+        .format-groups { display: flex; flex-direction: column; gap: 1rem; }
 
         .format-group-label {
             font-size: 0.75rem;
@@ -167,38 +227,24 @@
             margin-bottom: 0.5rem;
         }
 
-        .format-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
+        .format-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 
         .format-btn {
-            padding: 0.4rem 1rem;
+            padding: 0.4rem 0.9rem;
             border-radius: 8px;
             border: 1px solid var(--border);
             background: transparent;
             color: var(--muted);
             font-family: 'Space Mono', monospace;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             cursor: pointer;
             transition: all 0.2s;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
         }
 
-        .format-btn:hover {
-            border-color: var(--accent);
-            color: var(--text);
-        }
+        .format-btn:hover { border-color: var(--accent); color: var(--text); }
+        .format-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
 
-        .format-btn.active {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: white;
-        }
-
-        /* Convert button */
         .convert-btn {
             width: 100%;
             padding: 1rem;
@@ -211,7 +257,6 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
-            letter-spacing: 0.02em;
             margin-top: 1.5rem;
         }
 
@@ -220,96 +265,8 @@
             box-shadow: 0 8px 24px rgba(124,58,237,0.4);
         }
 
-        .convert-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+        .convert-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-        /* Progress */
-        .progress-wrap {
-            display: none;
-            margin-top: 1.5rem;
-        }
-
-        .progress-wrap.visible { display: block; }
-
-        .progress-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .progress-label {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--muted);
-        }
-
-        .progress-pct {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--accent2);
-        }
-
-        .progress-bar {
-            height: 4px;
-            background: var(--border);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent), var(--accent2));
-            border-radius: 4px;
-            width: 0%;
-            transition: width 0.3s;
-        }
-
-        .progress-fill.indeterminate {
-            width: 40%;
-            animation: indeterminate 1.5s ease-in-out infinite;
-        }
-
-        @keyframes indeterminate {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(350%); }
-        }
-
-        /* Download */
-        .download-wrap {
-            display: none;
-            margin-top: 1rem;
-        }
-
-        .download-wrap.visible { display: block; }
-
-        .download-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            width: 100%;
-            padding: 1rem;
-            border-radius: 12px;
-            border: 1px solid var(--success);
-            background: rgba(16,185,129,0.1);
-            color: var(--success);
-            font-family: 'Syne', sans-serif;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-
-        .download-btn:hover {
-            background: rgba(16,185,129,0.2);
-            transform: translateY(-1px);
-        }
-
-        /* Status */
         .status {
             font-family: 'Space Mono', monospace;
             font-size: 0.75rem;
@@ -321,13 +278,49 @@
 
         .status.error { color: var(--error); }
         .status.success { color: var(--success); }
+        .status.warning { color: var(--warning); }
+
+        .stats {
+            display: flex;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            background: rgba(6,182,212,0.05);
+            border: 1px solid rgba(6,182,212,0.1);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .stat { text-align: center; flex: 1; }
+
+        .stat-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent2);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+            font-family: 'Space Mono', monospace;
+        }
 
         footer {
             text-align: center;
             margin-top: 2rem;
+            margin-bottom: 1rem;
             color: var(--muted);
             font-family: 'Space Mono', monospace;
             font-size: 0.7rem;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 480px) {
+            .card { padding: 1rem; }
+            .dropzone { padding: 2rem 1rem; }
+            .format-btn { padding: 0.35rem 0.7rem; font-size: 0.7rem; }
+            .stats { gap: 0.5rem; }
+            .stat-value { font-size: 1rem; }
         }
     </style>
 </head>
@@ -338,22 +331,32 @@
             <p>// video & audio — sin límites, sin registro, gratis</p>
         </header>
 
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" id="statTotal">0</div>
+                <div class="stat-label">convertidos total</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="statSession">0</div>
+                <div class="stat-label">esta sesión</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="statFiles">0</div>
+                <div class="stat-label">listos ahora</div>
+            </div>
+        </div>
+
         <div class="card">
-            <!-- Drop zone -->
             <div class="dropzone" id="dropzone">
-                <input type="file" id="archivo" accept="video/*,audio/*">
+                <input type="file" id="archivo" accept="video/*,audio/*" multiple>
                 <div class="dropzone-icon">📁</div>
-                <h3>Arrastra tu archivo aquí</h3>
-                <p>o haz click para seleccionar</p>
+                <h3>Arrastra tus archivos aquí</h3>
+                <p>o haz click — múltiples archivos permitidos</p>
             </div>
 
-            <div class="file-info" id="fileInfo">
-                <div class="file-icon">🎬</div>
-                <div class="file-details">
-                    <div class="file-name" id="fileName">—</div>
-                    <div class="file-size" id="fileSize">—</div>
-                </div>
-            </div>
+            <div class="file-list" id="fileList"></div>
+            <div class="preview-wrap" id="previewWrap"></div>
+            <div class="status" id="globalStatus"></div>
         </div>
 
         <div class="card">
@@ -361,7 +364,7 @@
             <div class="format-groups">
                 <div>
                     <div class="format-group-label">🎵 Audio</div>
-                    <div class="format-grid" id="audioFormats">
+                    <div class="format-grid">
                         <button class="format-btn active" data-format="mp3">MP3</button>
                         <button class="format-btn" data-format="wav">WAV</button>
                         <button class="format-btn" data-format="aac">AAC</button>
@@ -371,7 +374,7 @@
                 </div>
                 <div>
                     <div class="format-group-label">🎬 Video</div>
-                    <div class="format-grid" id="videoFormats">
+                    <div class="format-grid">
                         <button class="format-btn" data-format="mp4">MP4</button>
                         <button class="format-btn" data-format="webm">WEBM</button>
                         <button class="format-btn" data-format="avi">AVI</button>
@@ -382,29 +385,14 @@
             </div>
 
             <button class="convert-btn" id="convertBtn" disabled>
-                Convertir
+                Convertir archivos
             </button>
-
-            <div class="progress-wrap" id="progressWrap">
-                <div class="progress-header">
-                    <span class="progress-label" id="progressLabel">Cargando ffmpeg...</span>
-                    <span class="progress-pct" id="progressPct">0%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill indeterminate" id="progressFill"></div>
-                </div>
-            </div>
-
-            <div class="download-wrap" id="downloadWrap">
-                <a class="download-btn" id="downloadBtn" href="#" download>
-                    ⬇ Descargar archivo convertido
-                </a>
-            </div>
-
-            <div class="status" id="status"></div>
         </div>
 
-        <footer>procesado en tu navegador — tus archivos nunca salen de tu PC</footer>
+        <footer>
+            🔒 procesado en tu navegador — tus archivos nunca salen de tu PC<br>
+            máximo 500MB por archivo
+        </footer>
     </div>
 
     <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
@@ -413,9 +401,18 @@
         const ffmpeg = createFFmpeg({ log: false });
 
         let selectedFormat = 'mp3';
-        let selectedFile = null;
+        let fileQueue = [];
+        let sessionCount = 0;
+        let totalCount = parseInt(localStorage.getItem('totalConverted') || '0');
 
-        // Format buttons
+        updateStats();
+
+        function updateStats() {
+            document.getElementById('statTotal').textContent = totalCount;
+            document.getElementById('statSession').textContent = sessionCount;
+            document.getElementById('statFiles').textContent = fileQueue.filter(f => f.status === 'done').length;
+        }
+
         document.querySelectorAll('.format-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.format-btn').forEach(b => b.classList.remove('active'));
@@ -424,36 +421,103 @@
             });
         });
 
-        // File input
-        const archivoInput = document.getElementById('archivo');
         const dropzone = document.getElementById('dropzone');
+        const archivoInput = document.getElementById('archivo');
 
-        dropzone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropzone.classList.add('dragover');
-        });
-
+        dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
         dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
-
         dropzone.addEventListener('drop', (e) => {
             e.preventDefault();
             dropzone.classList.remove('dragover');
-            if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+            Array.from(e.dataTransfer.files).forEach(handleFile);
         });
 
         archivoInput.addEventListener('change', () => {
-            if (archivoInput.files[0]) handleFile(archivoInput.files[0]);
+            Array.from(archivoInput.files).forEach(handleFile);
+            archivoInput.value = '';
         });
 
         function handleFile(file) {
-            selectedFile = file;
-            document.getElementById('fileName').textContent = file.name;
-            document.getElementById('fileSize').textContent = formatSize(file.size);
-            document.getElementById('fileInfo').classList.add('visible');
+            const status = document.getElementById('globalStatus');
+
+            if (file.size > 500000000) {
+                status.textContent = `✗ "${file.name}" supera 500MB. Archivo omitido.`;
+                status.className = 'status error';
+                return;
+            }
+
+            if (fileQueue.find(f => f.file.name === file.name && f.file.size === file.size)) {
+                status.textContent = `"${file.name}" ya está en la lista.`;
+                status.className = 'status warning';
+                return;
+            }
+
+            const id = Date.now() + Math.random();
+            fileQueue.push({ id, file, status: 'pending', downloadUrl: null, progress: 0 });
+
+            renderFileList();
+            showPreview(file);
             document.getElementById('convertBtn').disabled = false;
-            document.getElementById('downloadWrap').classList.remove('visible');
-            document.getElementById('status').textContent = '';
-            document.getElementById('status').className = 'status';
+            status.textContent = '';
+            status.className = 'status';
+        }
+
+        function renderFileList() {
+            const list = document.getElementById('fileList');
+            list.innerHTML = '';
+
+            fileQueue.forEach(item => {
+                const el = document.createElement('div');
+                el.className = 'file-item';
+
+                const isVideo = item.file.type.startsWith('video');
+                const statusLabels = { pending: 'pendiente', converting: 'convirtiendo...', done: 'listo ✓', error: 'error ✗' };
+
+                el.innerHTML = `
+                    <div class="file-item-icon">${isVideo ? '🎬' : '🎵'}</div>
+                    <div class="file-item-info">
+                        <div class="file-item-name">${item.file.name}</div>
+                        <div class="file-item-meta">
+                            <span class="file-item-size">${formatSize(item.file.size)}</span>
+                            <span class="file-item-status ${item.status}">${statusLabels[item.status]}</span>
+                        </div>
+                        <div class="file-item-progress ${item.status === 'converting' ? 'visible' : ''}" id="progress-${item.id}">
+                            <div class="file-item-progress-fill" id="fill-${item.id}" style="width:${item.progress}%"></div>
+                        </div>
+                    </div>
+                    ${item.downloadUrl ? `<a class="file-item-download visible" href="${item.downloadUrl}" download="${item.file.name.replace(/\.[^/.]+$/, '')}.${selectedFormat}">⬇</a>` : ''}
+                    ${item.status !== 'converting' ? `<button class="file-item-remove" data-id="${item.id}">✕</button>` : ''}
+                `;
+
+                list.appendChild(el);
+            });
+
+            list.querySelectorAll('.file-item-remove').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = parseFloat(btn.dataset.id);
+                    fileQueue = fileQueue.filter(f => f.id !== id);
+                    renderFileList();
+                    if (fileQueue.length === 0) {
+                        document.getElementById('convertBtn').disabled = true;
+                        document.getElementById('previewWrap').classList.remove('visible');
+                        document.getElementById('previewWrap').innerHTML = '';
+                    }
+                    updateStats();
+                });
+            });
+        }
+
+        function showPreview(file) {
+            const wrap = document.getElementById('previewWrap');
+            wrap.innerHTML = '';
+            wrap.classList.add('visible');
+            const url = URL.createObjectURL(file);
+            const isVideo = file.type.startsWith('video');
+            const el = document.createElement(isVideo ? 'video' : 'audio');
+            el.src = url;
+            el.controls = true;
+            if (isVideo) el.muted = true;
+            wrap.appendChild(el);
         }
 
         function formatSize(bytes) {
@@ -461,73 +525,72 @@
             return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
         }
 
-        // Convert
         document.getElementById('convertBtn').addEventListener('click', async () => {
-            if (!selectedFile) return;
+            const pending = fileQueue.filter(f => f.status === 'pending');
+            if (pending.length === 0) return;
 
-            const btn = document.getElementById('convertBtn');
-            const progressWrap = document.getElementById('progressWrap');
-            const progressFill = document.getElementById('progressFill');
-            const progressLabel = document.getElementById('progressLabel');
-            const progressPct = document.getElementById('progressPct');
-            const status = document.getElementById('status');
-            const downloadWrap = document.getElementById('downloadWrap');
+            document.getElementById('convertBtn').disabled = true;
+            const globalStatus = document.getElementById('globalStatus');
 
-            btn.disabled = true;
-            progressWrap.classList.add('visible');
-            downloadWrap.classList.remove('visible');
-            status.textContent = '';
-            status.className = 'status';
+            if (!ffmpeg.isLoaded()) {
+                globalStatus.textContent = 'Cargando ffmpeg...';
+                globalStatus.className = 'status';
+                await ffmpeg.load();
+                globalStatus.textContent = '';
+            }
 
-            try {
-                if (!ffmpeg.isLoaded()) {
-                    progressLabel.textContent = 'Cargando ffmpeg...';
-                    progressFill.classList.add('indeterminate');
-                    await ffmpeg.load();
-                    progressFill.classList.remove('indeterminate');
+            for (const item of pending) {
+                item.status = 'converting';
+                item.progress = 0;
+                renderFileList();
+
+                try {
+                    const ext = item.file.name.split('.').pop();
+                    const inputName = `input_${item.id}.${ext}`;
+                    const outputName = `output_${item.id}.${selectedFormat}`;
+
+                    ffmpeg.setProgress(({ ratio }) => {
+                        item.progress = Math.min(Math.round(ratio * 100), 100);
+                        const fill = document.getElementById(`fill-${item.id}`);
+                        if (fill) fill.style.width = item.progress + '%';
+                    });
+
+                    ffmpeg.FS('writeFile', inputName, await fetchFile(item.file));
+                    await ffmpeg.run('-i', inputName, outputName);
+
+                    const data = ffmpeg.FS('readFile', outputName);
+                    item.downloadUrl = URL.createObjectURL(new Blob([data.buffer]));
+                    item.status = 'done';
+                    item.progress = 100;
+
+                    ffmpeg.FS('unlink', inputName);
+                    ffmpeg.FS('unlink', outputName);
+
+                    sessionCount++;
+                    totalCount++;
+                    localStorage.setItem('totalConverted', totalCount);
+
+                } catch (err) {
+                    item.status = 'error';
+                    console.error(err);
                 }
 
-                progressLabel.textContent = 'Procesando archivo...';
-                progressFill.style.width = '30%';
-                progressPct.textContent = '30%';
-
-                const ext = selectedFile.name.split('.').pop();
-                const inputName = `input.${ext}`;
-                const outputName = `output.${selectedFormat}`;
-
-                ffmpeg.FS('writeFile', inputName, await fetchFile(selectedFile));
-                progressFill.style.width = '60%';
-                progressPct.textContent = '60%';
-
-                progressLabel.textContent = 'Convirtiendo...';
-                await ffmpeg.run('-i', inputName, outputName);
-
-                progressFill.style.width = '100%';
-                progressPct.textContent = '100%';
-
-                const data = ffmpeg.FS('readFile', outputName);
-                const url = URL.createObjectURL(new Blob([data.buffer]));
-
-                const baseName = selectedFile.name.replace(/\.[^/.]+$/, '');
-                const downloadBtn = document.getElementById('downloadBtn');
-                downloadBtn.href = url;
-                downloadBtn.download = `${baseName}.${selectedFormat}`;
-
-                downloadWrap.classList.add('visible');
-                status.textContent = '✓ Conversión completada';
-                status.className = 'status success';
-
-                // Cleanup
-                ffmpeg.FS('unlink', inputName);
-                ffmpeg.FS('unlink', outputName);
-
-            } catch (err) {
-                status.textContent = '✗ Error al convertir. Verifica que el formato sea compatible.';
-                status.className = 'status error';
-                progressFill.style.width = '0%';
-            } finally {
-                btn.disabled = false;
+                renderFileList();
+                updateStats();
             }
+
+            const done = fileQueue.filter(f => f.status === 'done').length;
+            const errors = fileQueue.filter(f => f.status === 'error').length;
+
+            if (errors === 0) {
+                globalStatus.textContent = `✓ ${done} archivo${done > 1 ? 's' : ''} convertido${done > 1 ? 's' : ''}`;
+                globalStatus.className = 'status success';
+            } else {
+                globalStatus.textContent = `✓ ${done} convertidos — ✗ ${errors} con error`;
+                globalStatus.className = 'status warning';
+            }
+
+            document.getElementById('convertBtn').disabled = fileQueue.filter(f => f.status === 'pending').length === 0;
         });
     </script>
 </body>
